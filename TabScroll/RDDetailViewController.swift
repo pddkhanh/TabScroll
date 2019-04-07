@@ -6,7 +6,7 @@ class RDDetailViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 36, weight: UIFontWeightSemibold)
+        label.font = UIFont.systemFont(ofSize: 36, weight: UIFont.Weight.semibold)
         return label
     }()
     

@@ -45,7 +45,7 @@ class RDTopTabBarController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.childViewControllers.forEach {
+        self.children.forEach {
             if $0.automaticallyAdjustsScrollViewInsets {
                 let insets = UIEdgeInsets(top: self.tabControl.bounds.height, left: 0, bottom: 0, right: 0)
                 ($0.view as? UIScrollView)?.scrollIndicatorInsets = insets
@@ -55,13 +55,13 @@ class RDTopTabBarController: UIViewController {
     }
     
     func setViewControllers(_ viewControllers: [UIViewController]?, animated: Bool) {
-        self.childViewControllers.forEach { $0.willMove(toParentViewController: nil) }
+        self.children.forEach { $0.willMove(toParent: nil) }
         self.scrollView.pagedViews = []
-        self.childViewControllers.forEach { $0.removeFromParentViewController() }
+        self.children.forEach { $0.removeFromParent() }
         
-        viewControllers?.forEach { self.addChildViewController($0) }
+        viewControllers?.forEach { self.addChild($0) }
         self.scrollView.pagedViews = viewControllers?.map { $0.view } ?? []
-        viewControllers?.forEach { $0.didMove(toParentViewController: self) }
+        viewControllers?.forEach { $0.didMove(toParent: self) }
         
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
@@ -69,7 +69,7 @@ class RDTopTabBarController: UIViewController {
         let contentOffset = -self.tabControl.bounds.height
         viewControllers?.forEach { ($0.view as? UIScrollView)?.contentOffset.y = contentOffset }
         
-        self.tabControl.setTitles(titles: self.childViewControllers.map { $0.title ?? "No Title" })
+        self.tabControl.setTitles(titles: self.children.map { $0.title ?? "No Title" })
     }
 }
 
@@ -96,11 +96,11 @@ extension RDTopTabBarController: UIScrollViewDelegate {
 extension RDTopTabBarController: RDTabControlDelegate {
     
     func tabControl(_ tabControl: RDTabControl?, didSelectButtonAt index: Int) {
-        guard index < self.childViewControllers.count else {
+        guard index < self.children.count else {
             return
         }
         
-        let viewController = self.childViewControllers[index]
+        let viewController = self.children[index]
         self.scrollView.scrollRectToVisible(viewController.view.frame, animated: true)
     }
 }

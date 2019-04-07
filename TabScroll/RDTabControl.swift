@@ -23,13 +23,13 @@ struct RDTabControlTheme {
                                              selectionIndicatorHeight: 1,
                                              showsDivider: true,
                                              dividerColor: UIColor.lightGray,
-                                             fontAttributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 13, weight: UIFontWeightSemibold)])
+                                             fontAttributes: [convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.semibold)])
 }
 
 class RDTabControl: UIView {
     
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: 48)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 48)
     }
     
     private(set) var theme: RDTabControlTheme
@@ -89,18 +89,18 @@ class RDTabControl: UIView {
     }
     
     fileprivate func styleButton(_ button: UIButton, title: String) {
-        button.setAttributedTitle(NSAttributedString(string: title, attributes: self.attributesWithColor(self.theme.normalColor)), for: .normal)
-        button.setAttributedTitle(NSAttributedString(string: title, attributes: self.attributesWithColor(self.theme.highlightedColor)), for: .highlighted)
-        button.setAttributedTitle(NSAttributedString(string: title, attributes: self.attributesWithColor(self.theme.selectedColor)), for: .selected)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: convertToOptionalNSAttributedStringKeyDictionary(self.attributesWithColor(self.theme.normalColor))), for: .normal)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: convertToOptionalNSAttributedStringKeyDictionary(self.attributesWithColor(self.theme.highlightedColor))), for: .highlighted)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: convertToOptionalNSAttributedStringKeyDictionary(self.attributesWithColor(self.theme.selectedColor))), for: .selected)
     }
     
     fileprivate func attributesWithColor(_ color: UIColor) -> [String: NSObject] {
         var attributes = self.theme.fontAttributes
-        attributes[NSForegroundColorAttributeName] = color
+        attributes[convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor)] = color
         return attributes
     }
 
-    func handleButtonPress(sender: UIButton) {
+    @objc func handleButtonPress(sender: UIButton) {
         guard let index = self.buttons.index(of: sender) else {
             return
         }
@@ -140,4 +140,15 @@ class RDTabControl: UIView {
         
         self.focusOnButtonAtIndex(self.scrollView?.mostVisibleIndex ?? 0, animated: true)
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }
