@@ -25,7 +25,7 @@ class RDTabScrollView: UIScrollView {
         guard let minimum = diffs.min() else {
             return nil
         }
-        return diffs.index(of: minimum)
+        return diffs.firstIndex(of: minimum)
     }
     
     init() {

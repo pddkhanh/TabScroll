@@ -101,7 +101,7 @@ class RDTabControl: UIView {
     }
 
     @objc func handleButtonPress(sender: UIButton) {
-        guard let index = self.buttons.index(of: sender) else {
+        guard let index = self.buttons.firstIndex(of: sender) else {
             return
         }
         self.updateSelectionIndicator()
